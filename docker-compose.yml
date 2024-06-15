@@ -1,0 +1,38 @@
+version: '3.8'
+ 
+services:
+  frontend:
+    build:
+      context: ./fct2024-front
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+ 
+  backend:
+    build:
+      context: ./fct2024-api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/profileRooms
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: profile
+ 
+  db:
+    image: postgres:16.3
+    environment:
+      POSTGRES_DB: profileRooms
+      POSTGRES_PASSWORD: profile
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+ 
+networks:
+  app-network:
+    driver: bridge
